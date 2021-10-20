@@ -20,12 +20,22 @@ static int test_pass = 0;
 
 #define EXPECT_EQ_INT(expect, actual) EXPECT_EQ_BASE((expect) == (actual), expect, actual, "%d")
 
+#define TEST_ERROR(error,json)\
+    do{\
+        chita_value v;\
+        v.type = CHITA_FALSE;\
+        EXPECT_EQ_INT(error,chita_parse(&v,json));\
+        EXPECT_EQ_INT(CHITA_NULL,chita_get_type(&v));\
+    } while(0)
+
 static void test_parse_null() {
     chita_value v;
     v.type = CHITA_FALSE;
     EXPECT_EQ_INT(CHITA_PARSE_OK, chita_parse(&v, "null"));
     EXPECT_EQ_INT(CHITA_NULL, chita_get_type(&v));
 }
+
+
 
 static void test_parse_expect_value() {
     chita_value v;
@@ -57,8 +67,22 @@ static void test_parse_root_not_singular() {
     EXPECT_EQ_INT(CHITA_NULL, chita_get_type(&v));
 }
 
+static void test_parse_true(){
+    chita_value v;
+    v.type = CHITA_FALSE;
+    EXPECT_EQ_INT(CHITA_PARSE_OK,chita_parse(&v,"true"));
+    EXPECT_EQ_INT(CHITA_TRUE,chita_get_type(&v));
+}
+static void test_parse_false(){
+    chita_value v;
+    v.type = CHITA_TRUE;
+    EXPECT_EQ_INT(CHITA_PARSE_OK,chita_parse(&v,"false"));
+    EXPECT_EQ_INT(CHITA_FALSE,chita_get_type(&v));
+}
 static void test_parse() {
     test_parse_null();
+    test_parse_true();    
+    test_parse_false();   
     test_parse_expect_value();
     test_parse_invalid_value();
     test_parse_root_not_singular();
