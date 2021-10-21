@@ -12,17 +12,23 @@ typedef enum {
 } chita_type;
 
 typedef struct {
+    double n;
     chita_type type;
 } chita_value;
+
+
 
 enum {
     CHITA_PARSE_OK = 0,             /* JSON正常返回            */
     CHITA_PARSE_EXPECT_VALUE,       /* JSON只含有空白           */
     CHITA_PARSE_INVALID_VALUE,      /* JSON在空白之后还有其他字符 */
-    CHITA_PARSE_ROOT_NOT_SINGULAR   /* 非三种字面值             */
+    CHITA_PARSE_ROOT_NOT_SINGULAR,  /* 非三种字面值             */
+    CHITA_PARSE_NUMBER_TOO_BIG      /* */
 };
+
 int chita_parse(chita_value* v, const char* json);
 
 chita_type chita_get_type(const chita_value* v);
 
+double chita_get_number(const chita_value* v);
 #endif /* CHITAJSON_H__ */
